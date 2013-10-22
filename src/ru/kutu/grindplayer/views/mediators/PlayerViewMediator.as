@@ -22,6 +22,10 @@ package ru.kutu.grindplayer.views.mediators {
 		import ru.kutu.osmf.hls.OSMFHLSPluginInfo;
 	}
 	
+	CONFIG::OPEN_HLS {
+		import org.denivip.osmf.plugins.HLSPluginInfo;
+	}
+	
 	public class PlayerViewMediator extends PlayerViewBaseMediator {
 		
 		private var _zoom:int;
@@ -68,8 +72,13 @@ package ru.kutu.grindplayer.views.mediators {
 		override protected function addCustomPlugins(pluginConfigurations:Vector.<MediaResourceBase>):void {
 			pluginConfigurations.push(new PluginInfoResource(new SubtitlesPluginInfo()));
 			pluginConfigurations.push(new PluginInfoResource(new AdvertisementPluginInfo()));
+			
 			CONFIG::HLS {
 				pluginConfigurations.push(new PluginInfoResource(new OSMFHLSPluginInfo(contextView.view.loaderInfo)));
+			}
+			
+			CONFIG::OPEN_HLS {
+				pluginConfigurations.push(new PluginInfoResource(new HLSPluginInfo()));
 			}
 		}
 		

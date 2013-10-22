@@ -15,6 +15,7 @@
 	-externs ru.kutu.osmf.advertisement.AdvertisementPlugin ^
 	-externs ru.kutu.osmf.subtitles.SubtitlesPlugin ^
 	-define CONFIG::HLS false ^
+	-define CONFIG::OPEN_HLS true ^
 	-define CONFIG::DEV false ^
 	%* ^
 	src\GrindPlayer.mxml
