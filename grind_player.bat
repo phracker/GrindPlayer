@@ -17,5 +17,6 @@
 	-define CONFIG::HLS false ^
 	-define CONFIG::OPEN_HLS true ^
 	-define CONFIG::DEV false ^
+	-define CONFIG::LOGGING %logging% ^
 	%* ^
 	src\GrindPlayer.mxml
