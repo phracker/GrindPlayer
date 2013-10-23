@@ -60,7 +60,7 @@ package ru.kutu.grindplayer.views.mediators {
 			var lines:Array = loader.data.split(/\r?\n/);
 			if (lines[0] != '#EXTM3U') { return; }
 			
-			var label:String;
+			var label:String = null;
 			
 			for (var i:int = 1; i < lines.length; i++) {
 				var line:String = String(lines[i]).replace(/^([\s|\t|\n]+)?(.*)([\s|\t|\n]+)?$/gm, "$2");
@@ -85,7 +85,9 @@ package ru.kutu.grindplayer.views.mediators {
 				}
 			}
 			
-			selectors.push(new QualitySelectorVO(selectors.length, label));
+			if (label != null) {
+				selectors.push(new QualitySelectorVO(selectors.length, label));
+			}
 		}
 		
 		override protected function onMenuChange(event:ControlBarMenuChangeEvent):void {
@@ -107,7 +109,7 @@ package ru.kutu.grindplayer.views.mediators {
 							configuration.initailQualityIndex = streamItems.length - view.selectedIndex - 1; // HLS stream has one more items
 							ls.qualityAutoSwitch = false;
 						}
-						configuration.initailQualityIndex
+						configuration.initailQualityIndex = 0;
 						configuration.playingPosition = player.currentTime;
 						eventDispatcher.dispatchEvent(new LoadMediaEvent(LoadMediaEvent.LOAD_MEDIA));
 					}
@@ -136,7 +138,6 @@ package ru.kutu.grindplayer.views.mediators {
 					player.switchDynamicStreamIndex(preferIndex);
 				}
 				player.autoDynamicStreamSwitch = autoSwitch;
-				logger.debug("------------ autoSwitch: " + autoSwitch);
 			} else {
 				super.selectInitialIndex();
 			}
