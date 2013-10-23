@@ -47,7 +47,6 @@ package ru.kutu.grindplayer.config  {
 	import ru.kutu.grind.views.mediators.FullscreenButtonBaseMediator;
 	import ru.kutu.grind.views.mediators.MainViewBaseMediator;
 	import ru.kutu.grind.views.mediators.PlayPauseButtonBaseMediator;
-	import ru.kutu.grind.views.mediators.QualityMenuBaseMediator;
 	import ru.kutu.grind.views.mediators.ScrubBarTipBaseMediator;
 	import ru.kutu.grind.views.mediators.TimeInfoBaseMediator;
 	import ru.kutu.grind.views.mediators.VolumeComponentBaseMediator;
@@ -55,8 +54,6 @@ package ru.kutu.grindplayer.config  {
 	import ru.kutu.grindplayer.views.components.Subtitles;
 	import ru.kutu.grindplayer.views.mediators.AutoHideMediator;
 	import ru.kutu.grindplayer.views.mediators.BufferInfoMediator;
-	import ru.kutu.grindplayer.views.mediators.PlayerViewMediator;
-	import ru.kutu.grindplayer.views.mediators.ScrubBarMediator;
 	import ru.kutu.grindplayer.views.mediators.ScrubBarMinimizedMediator;
 	import ru.kutu.grindplayer.views.mediators.ShortcutsMediator;
 	import ru.kutu.grindplayer.views.mediators.StatInfoMediator;
@@ -64,6 +61,10 @@ package ru.kutu.grindplayer.config  {
 	import ru.kutu.grindplayer.views.mediators.SubtitlesMenuMediator;
 	import ru.kutu.grindplayer.views.mediators.api.IScrubBarMinimized;
 	import ru.kutu.grindplayer.views.mediators.api.ISubtitlesMenuButton;
+	
+	import ru.kutu.grindplayer.views.mediators.MyPlayerViewMediator;
+	import ru.kutu.grindplayer.views.mediators.MyQualityMenuMediator;
+	import ru.kutu.grindplayer.views.mediators.MyScrubBarMediator;
 	
 	import spark.components.Application;
 	
@@ -84,7 +85,7 @@ package ru.kutu.grindplayer.config  {
 			
 			mediatorMap.map(IMainView).toMediator(MainViewBaseMediator);
 			
-			mediatorMap.map(IPlayerView).toMediator(PlayerViewMediator);
+			mediatorMap.map(IPlayerView).toMediator(MyPlayerViewMediator);
 			mediatorMap.map(IPlayerView).toMediator(AutoHideMediator);
 			mediatorMap.map(IPlayerView).toMediator(ShortcutsMediator);
 			
@@ -93,7 +94,7 @@ package ru.kutu.grindplayer.config  {
 			mediatorMap.map(IBufferInfo).toMediator(BufferInfoMediator);
 			mediatorMap.map(IStatInfo).toMediator(StatInfoMediator);
 			
-			mediatorMap.map(IScrubBar).toMediator(ScrubBarMediator);
+			mediatorMap.map(IScrubBar).toMediator(MyScrubBarMediator);
 			mediatorMap.map(IScrubBarTip).toMediator(ScrubBarTipBaseMediator);
 			mediatorMap.map(IScrubBarMinimized).toMediator(ScrubBarMinimizedMediator);
 			
@@ -104,7 +105,7 @@ package ru.kutu.grindplayer.config  {
 			mediatorMap.map(IControlBarMenuButtonHide).toMediator(ControlBarMenuHideBaseMediator);
 			mediatorMap.map(ISubtitlesMenuButton).toMediator(SubtitlesMenuMediator);
 			mediatorMap.map(IAlternateMenuButton).toMediator(AlternateMenuBaseMediator);
-			mediatorMap.map(IQualityMenuButton).toMediator(QualityMenuBaseMediator);
+			mediatorMap.map(IQualityMenuButton).toMediator(MyQualityMenuMediator);
 			
 			mediatorMap.map(IFullScreenButton).toMediator(FullscreenButtonBaseMediator);
 			mediatorMap.map(IFullScreenState).toMediator(FullScreenStateMediator);

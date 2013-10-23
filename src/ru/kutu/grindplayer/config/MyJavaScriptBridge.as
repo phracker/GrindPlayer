@@ -6,6 +6,7 @@
 package ru.kutu.grindplayer.config {
 	
 	import flash.net.NetStream;
+	import flash.external.ExternalInterface;
 	
 	import org.osmf.events.MediaPlayerStateChangeEvent;
 	import org.osmf.events.LoadEvent;
@@ -27,6 +28,21 @@ package ru.kutu.grindplayer.config {
 			super();
 		}
 		
+		/**
+		 * Example for add custom function
+		 */
+		/*
+		override protected function createJSBridge():void {
+			super.createJSBridge();
+			
+			ExternalInterface.addCallback("custom", custom);
+		}
+		
+		protected function custom(name:String = null, value:String = null):void {
+			logger.debug(name + ": " + value);
+		}
+		*/
+		
 		[PostConstruct]
 		override public function init():void {
 			super.init();
@@ -35,7 +51,6 @@ package ru.kutu.grindplayer.config {
 			player.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadStateChangeToGetNetStream);
 			player.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, onCurrentTimeChangeForBufferTimeAdjustment);
 		}
-		
 		
 		private function onPlayerStateChangeForBufferTimeAdjustment(e:MediaPlayerStateChangeEvent):void
 		{
