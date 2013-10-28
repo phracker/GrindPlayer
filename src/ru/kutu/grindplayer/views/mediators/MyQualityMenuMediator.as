@@ -109,7 +109,6 @@ package ru.kutu.grindplayer.views.mediators {
 							configuration.initailQualityIndex = streamItems.length - view.selectedIndex - 1; // HLS stream has one more items
 							ls.qualityAutoSwitch = false;
 						}
-						configuration.initailQualityIndex = 0;
 						configuration.playingPosition = player.currentTime;
 						eventDispatcher.dispatchEvent(new LoadMediaEvent(LoadMediaEvent.LOAD_MEDIA));
 					}
