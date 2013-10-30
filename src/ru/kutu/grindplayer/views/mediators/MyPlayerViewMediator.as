@@ -51,9 +51,9 @@ package ru.kutu.grindplayer.views.mediators {
 		
 		override protected function processConfiguration(flashvars:Object):void {
 			
-			if (flashvars.src == null && flashvars.streamId != null) {
-				flashvars.hdsUrl = "http://wtbtshdflash-f.akamaihd.net/z/" + flashvars.streamId + "/manifest.f4m";
-				flashvars.hlsUrl = "http://wtbtshdflash-f.akamaihd.net/i/" + flashvars.streamId + "/master.m3u8";
+			if (flashvars.src == null && flashvars.streamId != null && flashvars.akamaiDomainName != null) {
+				flashvars.hdsUrl = "http://" + flashvars.akamaiDomainName + "/z/" + flashvars.streamId + "/manifest.f4m";
+				flashvars.hlsUrl = "http://" + flashvars.akamaiDomainName + "/i/" + flashvars.streamId + "/master.m3u8";
 				flashvars.src = flashvars.hdsUrl;
 			}
 			
