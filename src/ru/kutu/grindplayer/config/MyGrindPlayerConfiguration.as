@@ -2,6 +2,7 @@ package ru.kutu.grindplayer.config {
 
 	public class MyGrindPlayerConfiguration extends GrindPlayerConfiguration {
 		
+		public var streamId:String = null;
 		public var hlsUrl:String = null;
 		public var hdsUrl:String = null;
 		public var initailQualityIndex:Number = -1;

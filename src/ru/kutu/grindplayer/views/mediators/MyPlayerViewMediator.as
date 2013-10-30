@@ -24,8 +24,8 @@ package ru.kutu.grindplayer.views.mediators {
 			player.addEventListener(MediaPlayerCapabilityChangeEvent.CAN_SEEK_CHANGE, onCanSeekShange);
 		}
 		
-		private function onLoadStateChange(e:LoadEvent):void
-		{
+		private function onLoadStateChange(e:LoadEvent):void {
+			
 			var configuration:MyGrindPlayerConfiguration = playerConfiguration as MyGrindPlayerConfiguration;
 			
 			if (e.loadState == LoadState.READY) {
@@ -36,8 +36,8 @@ package ru.kutu.grindplayer.views.mediators {
 			}
 		}
 		
-		private function onCanSeekShange(e:MediaPlayerCapabilityChangeEvent):void
-		{
+		private function onCanSeekShange(e:MediaPlayerCapabilityChangeEvent):void {
+			
 			var configuration:MyGrindPlayerConfiguration = playerConfiguration as MyGrindPlayerConfiguration;
 			
 			if (player.canSeek) {
@@ -47,6 +47,17 @@ package ru.kutu.grindplayer.views.mediators {
 					player.play();
 				}
 			}
+		}
+		
+		override protected function processConfiguration(flashvars:Object):void {
+			
+			if (flashvars.src == null && flashvars.streamId != null) {
+				flashvars.hdsUrl = "http://wtbtshdflash-f.akamaihd.net/z/" + flashvars.streamId + "/manifest.f4m";
+				flashvars.hlsUrl = "http://wtbtshdflash-f.akamaihd.net/i/" + flashvars.streamId + "/master.m3u8";
+				flashvars.src = flashvars.hdsUrl;
+			}
+			
+			super.processConfiguration(flashvars);
 		}
 		
 		override protected function addCustomPlugins(pluginConfigurations:Vector.<MediaResourceBase>):void {
