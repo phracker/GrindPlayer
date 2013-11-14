@@ -1,3 +1,6 @@
+/**
+ * Written By Lee,Han-gil
+ */
 package ru.kutu.grindplayer.config {
 
 	public class MyGrindPlayerConfiguration extends GrindPlayerConfiguration {

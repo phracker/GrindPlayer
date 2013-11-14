@@ -1,8 +1,6 @@
 /**
- * This code written by HAN-GIL, LEE
- * To ensure BufferTime when AkamaiAdvancedPlugin is used
+ * Written By Lee,Han-gil
  */
-
 package ru.kutu.grindplayer.config  {
 	
 	import org.osmf.media.MediaFactory;
@@ -65,6 +63,7 @@ package ru.kutu.grindplayer.config  {
 	import ru.kutu.grindplayer.views.mediators.MyPlayerViewMediator;
 	import ru.kutu.grindplayer.views.mediators.MyQualityMenuMediator;
 	import ru.kutu.grindplayer.views.mediators.MyScrubBarMediator;
+	import ru.kutu.grindplayer.views.mediators.MyMainViewMediator;
 	
 	import spark.components.Application;
 	
@@ -83,7 +82,7 @@ package ru.kutu.grindplayer.config  {
 			injector.map(JavaScriptBridgeBase).toSingleton(MyJavaScriptBridge);
 			injector.map(Thumbnails).asSingleton();
 			
-			mediatorMap.map(IMainView).toMediator(MainViewBaseMediator);
+			mediatorMap.map(IMainView).toMediator(MyMainViewMediator);
 			
 			mediatorMap.map(IPlayerView).toMediator(MyPlayerViewMediator);
 			mediatorMap.map(IPlayerView).toMediator(AutoHideMediator);

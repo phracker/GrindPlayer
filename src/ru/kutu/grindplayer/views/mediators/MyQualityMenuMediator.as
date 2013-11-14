@@ -1,3 +1,6 @@
+/**
+ * Written By Lee,Han-gil
+ */
 package ru.kutu.grindplayer.views.mediators {
 	
 	import flash.events.Event;
