@@ -11,9 +11,10 @@ package ru.kutu.grindplayer.views.mediators {
 	import org.osmf.media.MediaPlayer;
 	import org.osmf.media.MediaPlayerState;
 	import org.osmf.media.MediaElement;
-	import org.osmf.events.MediaPlayerStateChangeEvent;
-	import org.osmf.events.MediaElementEvent;
 	import org.osmf.events.LoadEvent;
+	import org.osmf.events.MediaElementEvent;
+	import org.osmf.events.MediaPlayerStateChangeEvent;
+	import org.osmf.events.MediaPlayerCapabilityChangeEvent;
 	import org.osmf.net.DynamicStreamingItem;
 	import org.osmf.net.DynamicStreamingResource;
 	import org.osmf.traits.DynamicStreamTrait;
@@ -40,13 +41,43 @@ package ru.kutu.grindplayer.views.mediators {
 		
 		private var _dynamicTraitInHds:Boolean;
 		
+		private var duration:Number = 0;
+		private var seekTo:Number = 0;
+		
 		override public function initialize():void {
 			super.initialize();
 			player.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadStateChange);
+			player.addEventListener(MediaPlayerCapabilityChangeEvent.CAN_SEEK_CHANGE, onCanSeekShange);
+		}
+		
+		private function onCanSeekShange(e:MediaPlayerCapabilityChangeEvent):void {
+			
+			var configuration:MyGrindPlayerConfiguration = playerConfiguration as MyGrindPlayerConfiguration;
+			
+			if (player.canSeek) {
+				if (seekTo > 0) {
+					logger.debug(" * Seek to: " + seekTo + ", duration before: " + duration + ", current: " + player.duration);
+					
+					seekTo += player.duration - duration;
+					
+					logger.debug(" * Seek to(adjusted): " + seekTo);
+					
+					player.seek(seekTo);
+					seekTo = 0;
+					player.play();
+				}
+			}
 		}
 		
 		private function onLoadStateChange(e:LoadEvent):void {
+			
 			if (e.loadState == LoadState.READY) {
+				
+				if (seekTo > 0) {
+					player.play();
+					player.stop();
+				}
+				
 				var dynamicTrait:DynamicStreamTrait = player.media.getTrait(MediaTraitType.DYNAMIC_STREAM) as DynamicStreamTrait;
 				if(!dynamicTrait) {
 					view.visible = true;
@@ -65,7 +96,15 @@ package ru.kutu.grindplayer.views.mediators {
 			
 			if (isHdsStream()) {
 				_dynamicTraitInHds = true;
-				loadHlsMetaPlaylist();
+				
+				// test whether it has audio only source
+				var hasAudioOnlyStream:Boolean = false;
+				for (var i:int = 0; i < selectors.length; i++) {
+					var vo:QualitySelectorVO = selectors[i] as QualitySelectorVO;
+					if (vo.height == 0) hasAudioOnlyStream = true;
+				}
+				if (!hasAudioOnlyStream) loadHlsMetaPlaylist();
+				
 			} else {
 				// if selectors has just one video stream ("Auto, Video, Audio Only")
 				// then remove "Auto" menu
@@ -154,12 +193,14 @@ package ru.kutu.grindplayer.views.mediators {
 			var vo:QualitySelectorVO = selectors[view.selectedIndex] as QualitySelectorVO;
 			
 			if (vo) {
-				logger.debug("---- player.currentTime: " + player.currentTime);
+				logger.debug(" * player.currentTime: " + player.currentTime);
 				if (isHdsStream()) {
 					if (vo.label != "Auto" && vo.height == -1) { // Audio Only
 						configuration.src = configuration.hlsUrl;
 						configuration.initailQualityIndex = 0;
-						configuration.playingPosition = player.currentTime;
+						duration = player.duration;
+						seekTo = player.currentTime;
+						player.seek(player.currentTime-1);
 						eventDispatcher.dispatchEvent(new LoadMediaEvent(LoadMediaEvent.LOAD_MEDIA));
 					} else {
 						super.onMenuChange(event);
@@ -175,7 +216,8 @@ package ru.kutu.grindplayer.views.mediators {
 					}
 					
 					configuration.src = configuration.hdsUrl;
-					configuration.playingPosition = player.currentTime;
+					duration = player.duration;
+					seekTo = player.currentTime;
 					eventDispatcher.dispatchEvent(new LoadMediaEvent(LoadMediaEvent.LOAD_MEDIA));
 				}
 			}
