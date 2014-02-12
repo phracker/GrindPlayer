@@ -52,6 +52,12 @@
 		skinClass="ru.kutu.grindplayer.views.skins.ControlBarSkin"
 		/>
 	
+	<components:Logo
+		id="logo"
+		right="10"
+		top="10"
+		/>
+	
 	<components:BufferInfo
 		verticalCenter="0"
 		horizontalCenter="0"

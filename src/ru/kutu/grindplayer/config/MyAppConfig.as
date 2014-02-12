@@ -51,6 +51,7 @@ package ru.kutu.grindplayer.config  {
 	import ru.kutu.grind.views.mediators.VolumeComponentBaseMediator;
 	import ru.kutu.grindplayer.media.GrindMediaPlayer;
 	import ru.kutu.grindplayer.views.components.Subtitles;
+	import ru.kutu.grindplayer.views.components.Logo;
 	import ru.kutu.grindplayer.views.mediators.AutoHideMediator;
 	import ru.kutu.grindplayer.views.mediators.BufferInfoMediator;
 	import ru.kutu.grindplayer.views.mediators.ScrubBarMinimizedMediator;
@@ -58,6 +59,7 @@ package ru.kutu.grindplayer.config  {
 	import ru.kutu.grindplayer.views.mediators.StatInfoMediator;
 	import ru.kutu.grindplayer.views.mediators.SubtitlesMediator;
 	import ru.kutu.grindplayer.views.mediators.SubtitlesMenuMediator;
+	import ru.kutu.grindplayer.views.mediators.MyLogoMediator;
 	import ru.kutu.grindplayer.views.mediators.api.IScrubBarMinimized;
 	import ru.kutu.grindplayer.views.mediators.api.ISubtitlesMenuButton;
 	
@@ -110,6 +112,8 @@ package ru.kutu.grindplayer.config  {
 			
 			mediatorMap.map(IFullScreenButton).toMediator(FullscreenButtonBaseMediator);
 			mediatorMap.map(IFullScreenState).toMediator(FullScreenStateMediator);
+			
+			mediatorMap.map(Logo).toMediator(MyLogoMediator);
 		}
 		
 		override protected function configuration():void {
