@@ -183,6 +183,7 @@ package ru.kutu.grindplayer.views.mediators {
 			for each (var item:Object in items) {
 				if (!_dynamicTraitInHds || item.height < 0) {
 					selectors.push(new QualitySelectorVO(item.index, processLabelForSelectorVO(item), item.bitrate, item.height));
+					break;
 				}
 			}
 		}

@@ -45,6 +45,7 @@ package ru.kutu.grindplayer.config  {
 	import ru.kutu.grind.views.mediators.FullscreenButtonBaseMediator;
 	import ru.kutu.grind.views.mediators.MainViewBaseMediator;
 	import ru.kutu.grind.views.mediators.PlayPauseButtonBaseMediator;
+	import ru.kutu.grind.views.mediators.QualityMenuBaseMediator;
 	import ru.kutu.grind.views.mediators.ScrubBarTipBaseMediator;
 	import ru.kutu.grind.views.mediators.TimeInfoBaseMediator;
 	import ru.kutu.grind.views.mediators.VolumeComponentBaseMediator;
@@ -61,7 +62,7 @@ package ru.kutu.grindplayer.config  {
 	import ru.kutu.grindplayer.views.mediators.api.ISubtitlesMenuButton;
 	
 	import ru.kutu.grindplayer.views.mediators.MyPlayerViewMediator;
-	import ru.kutu.grindplayer.views.mediators.MyQualityMenuMediator;
+	//import ru.kutu.grindplayer.views.mediators.MyQualityMenuMediator;
 	import ru.kutu.grindplayer.views.mediators.MyScrubBarMediator;
 	import ru.kutu.grindplayer.views.mediators.MyMainViewMediator;
 	
@@ -104,7 +105,8 @@ package ru.kutu.grindplayer.config  {
 			mediatorMap.map(IControlBarMenuButtonHide).toMediator(ControlBarMenuHideBaseMediator);
 			mediatorMap.map(ISubtitlesMenuButton).toMediator(SubtitlesMenuMediator);
 			mediatorMap.map(IAlternateMenuButton).toMediator(AlternateMenuBaseMediator);
-			mediatorMap.map(IQualityMenuButton).toMediator(MyQualityMenuMediator);
+			mediatorMap.map(IQualityMenuButton).toMediator(QualityMenuBaseMediator);
+			//mediatorMap.map(IQualityMenuButton).toMediator(MyQualityMenuMediator);
 			
 			mediatorMap.map(IFullScreenButton).toMediator(FullscreenButtonBaseMediator);
 			mediatorMap.map(IFullScreenState).toMediator(FullScreenStateMediator);

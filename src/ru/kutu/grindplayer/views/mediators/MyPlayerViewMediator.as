@@ -18,6 +18,12 @@ package ru.kutu.grindplayer.views.mediators {
 				flashvars.hdsUrl = "http://" + flashvars.akamaiDomainName + "/z/" + flashvars.streamId + "/manifest.f4m";
 				flashvars.hlsUrl = "http://" + flashvars.akamaiDomainName + "/i/" + flashvars.streamId + "/master.m3u8";
 				flashvars.src = flashvars.hdsUrl;
+				
+				// If the value of initailQualityIndex equal -2 means it should be played audio only stream with HLS
+				if (flashvars.initailQualityIndex == -2) {
+					flashvars.src = flashvars.hlsUrl;
+					flashvars.initailQualityIndex = 0;
+				}
 			}
 			
 			super.processConfiguration(flashvars);

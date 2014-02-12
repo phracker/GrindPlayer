@@ -6,7 +6,7 @@
 	-debug=%debug% ^
 	-locale=en_US,ru_RU ^
 	-swf-version=11 ^
-	-target-player=10.2 ^
+	-target-player=10.3 ^
 	-default-size=640,360 ^
 	-default-background-color=0 ^
 	-sp src locale\{locale} ^
@@ -15,7 +15,7 @@
 	-externs ru.kutu.osmf.advertisement.AdvertisementPlugin ^
 	-externs ru.kutu.osmf.subtitles.SubtitlesPlugin ^
 	-define CONFIG::HLS false ^
-	-define CONFIG::OPEN_HLS true ^
+	-define CONFIG::OPEN_HLS false ^
 	-define CONFIG::DEV false ^
 	-define CONFIG::LOGGING %logging% ^
 	%* ^
