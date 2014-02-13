@@ -198,7 +198,7 @@ package ru.kutu.grindplayer.views.mediators {
 				if (isHdsStream()) {
 					if (vo.label != "Auto" && vo.height == -1) { // Audio Only
 						configuration.src = configuration.hlsUrl;
-						configuration.initailQualityIndex = 0;
+						configuration.initialQualityIndex = 0;
 						duration = player.duration;
 						seekTo = player.currentTime;
 						player.seek(player.currentTime-1);
@@ -208,11 +208,11 @@ package ru.kutu.grindplayer.views.mediators {
 					}
 				} else {
 					if (vo.label == "Auto") {
-						configuration.initailQualityIndex = 0;
+						configuration.initialQualityIndex = 0;
 						ls.qualityAutoSwitch = true;
 					} else {
 						// selector includes Audo and HLS stream has one more items so -2 is needed
-						configuration.initailQualityIndex = selectors.length - view.selectedIndex - 2;
+						configuration.initialQualityIndex = selectors.length - view.selectedIndex - 2;
 						ls.qualityAutoSwitch = false;
 					}
 					
@@ -228,7 +228,7 @@ package ru.kutu.grindplayer.views.mediators {
 			
 			var configuration:MyGrindPlayerConfiguration = playerConfiguration as MyGrindPlayerConfiguration;
 			var dynamicResource:DynamicStreamingResource = MediaElementUtils.getResourceFromParentOfType(media, DynamicStreamingResource) as DynamicStreamingResource;
-			var preferIndex:int = configuration.initailQualityIndex;
+			var preferIndex:int = configuration.initialQualityIndex;
 			
 			if(preferIndex > -1) {
 				var autoSwitch:Boolean = ls.qualityAutoSwitch && isHdsStream();

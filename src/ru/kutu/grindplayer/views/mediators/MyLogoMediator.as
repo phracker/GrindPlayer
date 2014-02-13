@@ -18,6 +18,8 @@ package ru.kutu.grindplayer.views.mediators {
 	
 	public class MyLogoMediator extends MediaControlBaseMediator {
 		
+		private static var LOGO_FADE_DURATION:uint = 600;
+		
 		[Inject] public var logo:Logo;
 		[Inject] public var injector:IInjector;
 		[Inject] public var contextView:ContextView;
@@ -51,7 +53,7 @@ package ru.kutu.grindplayer.views.mediators {
 			
 			fade = new Fade();
 			fade.target = logo;
-			fade.duration = 600;
+			fade.duration = LOGO_FADE_DURATION;
 			
 			var configuration:PlayerConfiguration = injector.getInstance(PlayerConfiguration);
 			autoHide = configuration.controlBarAutoHide;

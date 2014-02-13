@@ -20,7 +20,7 @@ package ru.kutu.grindplayer.config {
 		/**
 		 * Example for add custom function
 		 */
-		//*
+		/*
 		override protected function createJSBridge():void {
 			super.createJSBridge();
 			

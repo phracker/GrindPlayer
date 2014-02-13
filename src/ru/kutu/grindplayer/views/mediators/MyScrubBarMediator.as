@@ -55,9 +55,7 @@ package ru.kutu.grindplayer.views.mediators {
 		}
 		
 		protected function onUpdateTimer(event:TimerEvent):void {
-			if(netStream) {
-				view.percentLoaded = (player.currentTime + netStream.bufferLength) / player.duration;
-			}
+			view.percentLoaded = (player.currentTime + netStream.bufferLength) / player.duration;
 		}
 		
 		override protected function updateEnabled():void {
