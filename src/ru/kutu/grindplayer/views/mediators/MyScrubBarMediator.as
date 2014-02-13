@@ -39,8 +39,6 @@ package ru.kutu.grindplayer.views.mediators {
 			
 			updateTimer = new Timer(UPDATE_INTERVAL);
 			updateTimer.addEventListener(TimerEvent.TIMER, onUpdateTimer);
-			
-			updateTimer.start();
 		}
 		
 		private function onLoadStateChange(e:LoadEvent):void {
@@ -50,6 +48,7 @@ package ru.kutu.grindplayer.views.mediators {
 					lt = media.getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
 					if (lt) {
 						netStream = lt.netStream;
+						updateTimer.start();
 					}
 				}
 			}

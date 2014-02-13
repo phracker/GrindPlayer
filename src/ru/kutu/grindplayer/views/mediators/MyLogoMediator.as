@@ -1,5 +1,6 @@
 package ru.kutu.grindplayer.views.mediators {
 	
+	import spark.effects.Fade;
 	import flash.events.FullScreenEvent;
 	
 	import org.osmf.events.MediaPlayerStateChangeEvent;
@@ -25,10 +26,33 @@ package ru.kutu.grindplayer.views.mediators {
 		protected var fullScreenAutoHide:Boolean;
 		protected var isFullScreen:Boolean;
 		
-		private var shown:Boolean;
+		private var fade:Fade;
+		
+		public function get shown():Boolean {
+			return (fade.alphaTo == 1);
+		}
+		
+		public function set shown(value:Boolean):void {
+			
+			if (value) {
+				fade.alphaFrom = 0;
+				fade.alphaTo = 1;
+			} else {
+				fade.alphaFrom = 1;
+				fade.alphaTo = 0;
+			}
+
+			fade.stop();
+			fade.play();
+		}
 		
 		override public function initialize():void {
 			super.initialize();
+			
+			fade = new Fade();
+			fade.target = logo;
+			fade.duration = 600;
+			
 			var configuration:PlayerConfiguration = injector.getInstance(PlayerConfiguration);
 			autoHide = configuration.controlBarAutoHide;
 			fullScreenAutoHide = configuration.controlBarFullScreenAutoHide;
@@ -41,10 +65,8 @@ package ru.kutu.grindplayer.views.mediators {
 				dispatch(new AutoHideEvent(AutoHideEvent.REPEAT_PLEASE));
 			} else {
 				shown = true;
-				logo.visible = shown;
 			}
 			player.addEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, onMediaPlayerStateChange);
-			//logo.enabled = false;
 		}
 		
 		protected function onMediaPlayerStateChange(event:MediaPlayerStateChangeEvent = null):void {
@@ -62,19 +84,16 @@ package ru.kutu.grindplayer.views.mediators {
 			if (isFullScreen) {
 				if (!fullScreenAutoHide && !shown) {
 					shown = true;
-					logo.visible = shown;
 				}
 			} else {
 				if (!autoHide && !shown) {
 					shown = true;
-					logo.visible = shown;
 				}
 			}
 		}
 
 		protected function onAutoShow(event:AutoHideEvent):void {
 			shown = true;
-			logo.visible = shown;
 		}
 
 		protected function onAutoHide(event:AutoHideEvent):void {
@@ -84,7 +103,6 @@ package ru.kutu.grindplayer.views.mediators {
 				(!isFullScreen && autoHide)
 			) {
 				shown = false;
-				logo.visible = shown;
 			}
 		}
 	}
