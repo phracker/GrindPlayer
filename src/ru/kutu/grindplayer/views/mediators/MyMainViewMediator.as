@@ -5,7 +5,9 @@ package ru.kutu.grindplayer.views.mediators {
 	
 	import flash.net.NetStream;
 	import flash.utils.setTimeout;
+	import flash.utils.Timer;
 	import flash.events.NetStatusEvent;
+	import flash.events.TimerEvent;
 	
 	import org.osmf.net.StreamType;
 	import org.osmf.net.NetStreamLoadTrait;
@@ -28,7 +30,11 @@ package ru.kutu.grindplayer.views.mediators {
 	
 	public class MyMainViewMediator extends MainViewBaseMediator {
 		
+		private static var INIT_BUFFER_TIME_CHECKER_INTERVAL:uint = 50;
+		
 		[Inject] public var playerConfiguration:PlayerConfiguration;
+		
+		private var configuration:MyGrindPlayerConfiguration;
 		
 		private var netStream:NetStream = null;
 		private var streamType:String = null;
@@ -37,14 +43,21 @@ package ru.kutu.grindplayer.views.mediators {
 		private var duration:Number = 0;
 		private var seekTo:Number = 0;
 		
+		private var initBufferTimeCheckerTimer:Timer;
+		
 		override public function initialize():void {
 			super.initialize();
+			
+			configuration = playerConfiguration as MyGrindPlayerConfiguration;
 			
 			player.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, onCurrentTimeChange);
 			player.addEventListener(MediaPlayerCapabilityChangeEvent.CAN_SEEK_CHANGE, onCanSeekShange);
 			
 			player.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadStateChange);
 			player.addEventListener(TimeEvent.COMPLETE, onComplete);
+			
+			initBufferTimeCheckerTimer = new Timer(INIT_BUFFER_TIME_CHECKER_INTERVAL);
+			initBufferTimeCheckerTimer.addEventListener(TimerEvent.TIMER, onInitBufferTimeCheckerTimer);
 		}
 		
 		private function onCurrentTimeChange(event:TimeEvent):void {
@@ -58,15 +71,34 @@ package ru.kutu.grindplayer.views.mediators {
 			if ( netStream != null ) {
 				if (player.state != MediaPlayerState.BUFFERING) {
 					netStream.bufferTime = player.bufferTime;
-				} else {
-					netStream.bufferTime = 2;
 				}
 			}
 		}
 		
-		private function onCanSeekShange(e:MediaPlayerCapabilityChangeEvent):void {
+		override protected function onMediaPlayerStateChange(e:MediaPlayerStateChangeEvent):void {
 			
-			var configuration:MyGrindPlayerConfiguration = playerConfiguration as MyGrindPlayerConfiguration;
+			logger.debug(" * PlayerState: " + e.state);
+			
+			switch (e.state) {
+				case MediaPlayerState.PAUSED:
+					if ( netStream != null ) {
+						if (netStream.bufferTime != player.bufferTime) {
+							netStream.bufferTime = player.bufferTime;
+						}
+					}
+					break;
+			}
+			
+			super.onMediaPlayerStateChange(e);
+		}
+		
+		private function onInitBufferTimeCheckerTimer(event:TimerEvent):void {
+			
+			netStream.bufferTime = player.bufferTime;
+			logger.debug(" * ---- init: " + configuration.initialBufferTime + ", set: " + netStream.bufferTime + ", cur: " + netStream.bufferLength);
+		}
+		
+		private function onCanSeekShange(e:MediaPlayerCapabilityChangeEvent):void {
 			
 			if (player.canSeek) {
 				if (seekTo > 0) {
@@ -82,13 +114,11 @@ package ru.kutu.grindplayer.views.mediators {
 			
 			logger.debug(" * LoadState: " + e.loadState);
 			
-			var configuration:MyGrindPlayerConfiguration = playerConfiguration as MyGrindPlayerConfiguration;
-			
 			if (e.loadState == LoadState.READY) {
 				
 				var nsLoadTrait:NetStreamLoadTrait = player.media.getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
 				
-				logger.debug(" * >Loaded StreamType: " + MediaElementUtils.getStreamType(player.media));
+				logger.debug(" * Loaded StreamType: " + MediaElementUtils.getStreamType(player.media));
 				
 				if (streamType == StreamType.DVR && MediaElementUtils.getStreamType(player.media) == StreamType.RECORDED) {
 					nsLoadTrait.unload();
@@ -116,12 +146,18 @@ package ru.kutu.grindplayer.views.mediators {
 				netStream = nsLoadTrait.netStream;
 				
 				if (netStream != null) {
+					player.bufferTime = configuration.initialBufferTime;
+					initBufferTimeCheckerTimer.start();
 					netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+					player.pause();
+					setTimeout(player.play, 1000);
 				}
 				
 				if (streamType == null) {
 					streamType = MediaElementUtils.getStreamType(player.media);
 				}
+				
+				//netStream.
 			}
 		}
 		
@@ -130,23 +166,6 @@ package ru.kutu.grindplayer.views.mediators {
 			
 			view.errorText = "Trying to connect ...";
 			setTimeout(dispatchLoadEvent, 5000);
-		}
-		
-		override protected function onMediaPlayerStateChange(e:MediaPlayerStateChangeEvent):void {
-			
-			super.onMediaPlayerStateChange(e);
-			
-			logger.debug(" * PlayerState: " + e.state);
-			
-			switch (e.state) {
-				case MediaPlayerState.PAUSED:
-					if ( netStream != null ) {
-						if (netStream.bufferTime != player.bufferTime) {
-							netStream.bufferTime = player.bufferTime;
-						}
-					}
-					break;
-			}
 		}
 		
 		private function onNetStatus(event:NetStatusEvent):void {
@@ -165,8 +184,13 @@ package ru.kutu.grindplayer.views.mediators {
 						// player try to reload.
 						logger.debug(" * It is HLS Stream, unload and reload are required");
 						nsLoadTrait.unload();
-						setTimeout(dispatchLoadEvent, 1000);
+						setTimeout(dispatchLoadEvent, 500);
 					}
+					break;
+					
+				case "NetStream.Buffer.Full":
+					initBufferTimeCheckerTimer.stop();
+					player.bufferTime = configuration.bufferTime;
 					break;
 					
 				case "NetStream.Play.StreamNotFound":
@@ -184,7 +208,6 @@ package ru.kutu.grindplayer.views.mediators {
 		
 		private function onComplete(e:TimeEvent):void {
 			if (streamType == StreamType.DVR) {
-				var configuration:MyGrindPlayerConfiguration = playerConfiguration as MyGrindPlayerConfiguration;
 				var nsLoadTrait:NetStreamLoadTrait = player.media.getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
 				
 				nsLoadTrait.unload();
@@ -210,7 +233,6 @@ package ru.kutu.grindplayer.views.mediators {
 		
 		private function isHlsStream():Boolean {
 			
-			var configuration:MyGrindPlayerConfiguration = playerConfiguration as MyGrindPlayerConfiguration;
 			return configuration.src.lastIndexOf("m3u8") == ( configuration.src.length - "m3u8".length ) ;
 		}
 	}

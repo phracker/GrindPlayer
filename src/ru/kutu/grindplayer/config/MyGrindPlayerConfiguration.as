@@ -12,8 +12,8 @@ package ru.kutu.grindplayer.config {
 		public var hlsUrl:String = null;
 		public var hdsUrl:String = null;
 		
-		public var bufferTime:Number = 360;
-		public var initialBufferTime:Number = 30;
+		public var bufferTime:Number = 300;
+		public var initialBufferTime:Number = 0.1;
 		
 		// Quality Select from N to 0
 		// If set to -1 than it will be set "AUTO"
