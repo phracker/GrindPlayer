@@ -32,6 +32,7 @@ package ru.kutu.grindplayer.views.mediators {
 	public class MyMainViewMediator extends MainViewBaseMediator {
 		
 		private static var INIT_BUFFER_TIME_CHECKER_INTERVAL:uint = 200;
+		private static var FAILOVER_BUFFER_TIME:uint = 4;
 		
 		[Inject] public var playerConfiguration:PlayerConfiguration;
 		
@@ -45,6 +46,7 @@ package ru.kutu.grindplayer.views.mediators {
 		private var seekTo:Number = 0;
 		
 		private var initBufferTimeCheckerTimer:Timer;
+		private var isFirstLoad:Boolean = true;
 		
 		override public function initialize():void {
 			super.initialize();
@@ -145,11 +147,20 @@ package ru.kutu.grindplayer.views.mediators {
 				netStream = nsLoadTrait.netStream;
 				
 				if (netStream != null) {
-					netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-					player.bufferTime = configuration.initialBufferTime;
-					initBufferTimeCheckerTimer.start();
-					player.pause();
-					setTimeout(player.play, 1000);
+					if (isFirstLoad) {
+						netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+						player.bufferTime = configuration.initialBufferTime;
+						initBufferTimeCheckerTimer.start();
+						
+						// In the case of live stream,
+						// if pause and play within 2 second,
+						// playing position go to start point.
+						if (configuration.initialBufferTime > 2) {
+							player.pause();
+							setTimeout(player.play, 2000);
+						}
+						isFirstLoad = false;
+					}
 				}
 				
 				if (streamType == null) {
@@ -191,7 +202,7 @@ package ru.kutu.grindplayer.views.mediators {
 					break;
 					
 				case "NetStream.Buffer.Full":
-					configuration.initialBufferTime = 4;
+					configuration.initialBufferTime = FAILOVER_BUFFER_TIME;
 					initBufferTimeCheckerTimer.stop();
 					player.bufferTime = configuration.bufferTime;
 					break;
