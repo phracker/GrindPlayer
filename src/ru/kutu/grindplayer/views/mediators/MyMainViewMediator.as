@@ -12,6 +12,7 @@ package ru.kutu.grindplayer.views.mediators {
 	import org.osmf.net.StreamType;
 	import org.osmf.net.NetStreamLoadTrait;
 	import org.osmf.events.LoadEvent;
+	import org.osmf.events.SeekEvent;
 	import org.osmf.events.TimeEvent;
 	import org.osmf.events.MediaErrorEvent;
 	import org.osmf.events.MediaPlayerCapabilityChangeEvent;
@@ -30,16 +31,16 @@ package ru.kutu.grindplayer.views.mediators {
 	
 	public class MyMainViewMediator extends MainViewBaseMediator {
 		
-		private static var INIT_BUFFER_TIME_CHECKER_INTERVAL:uint = 50;
+		private static var INIT_BUFFER_TIME_CHECKER_INTERVAL:uint = 200;
 		
 		[Inject] public var playerConfiguration:PlayerConfiguration;
 		
 		private var configuration:MyGrindPlayerConfiguration;
 		
 		private var netStream:NetStream = null;
+		
 		private var streamType:String = null;
 		private var currentTime:Number = 0;
-		
 		private var duration:Number = 0;
 		private var seekTo:Number = 0;
 		
@@ -93,13 +94,11 @@ package ru.kutu.grindplayer.views.mediators {
 		}
 		
 		private function onInitBufferTimeCheckerTimer(event:TimerEvent):void {
-			
 			netStream.bufferTime = player.bufferTime;
 			logger.debug(" * ---- init: " + configuration.initialBufferTime + ", set: " + netStream.bufferTime + ", cur: " + netStream.bufferLength);
 		}
 		
 		private function onCanSeekShange(e:MediaPlayerCapabilityChangeEvent):void {
-			
 			if (player.canSeek) {
 				if (seekTo > 0) {
 					logger.debug(" * Seek, seekTo: " + secondsToHMSString(seekTo));
@@ -146,9 +145,9 @@ package ru.kutu.grindplayer.views.mediators {
 				netStream = nsLoadTrait.netStream;
 				
 				if (netStream != null) {
+					netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
 					player.bufferTime = configuration.initialBufferTime;
 					initBufferTimeCheckerTimer.start();
-					netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
 					player.pause();
 					setTimeout(player.play, 1000);
 				}
@@ -156,8 +155,6 @@ package ru.kutu.grindplayer.views.mediators {
 				if (streamType == null) {
 					streamType = MediaElementUtils.getStreamType(player.media);
 				}
-				
-				//netStream.
 			}
 		}
 		
@@ -188,7 +185,13 @@ package ru.kutu.grindplayer.views.mediators {
 					}
 					break;
 					
+				case "NetStream.Seek.Notify":
+					player.bufferTime = configuration.initialBufferTime;
+					netStream.bufferTime = configuration.initialBufferTime;
+					break;
+					
 				case "NetStream.Buffer.Full":
+					configuration.initialBufferTime = 4;
 					initBufferTimeCheckerTimer.stop();
 					player.bufferTime = configuration.bufferTime;
 					break;
