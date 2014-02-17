@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:s="library://ns.adobe.com/flex/spark"
-		 xmlns:helpers="ru.kutu.grindplayer.views.skins.helpers.*"
-		 >
-	<helpers:ColorizedBitmapImage
-		horizontalCenter="0"
-		verticalCenter="0"
-		source="@Embed('/../assets/skin/logo.png')"
-		/>
-</s:Panel>
--->
 
 <s:Image
 	xmlns:fx="http://ns.adobe.com/mxml/2009"
