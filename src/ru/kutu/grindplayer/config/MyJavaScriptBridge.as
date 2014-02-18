@@ -5,8 +5,6 @@ package ru.kutu.grindplayer.config {
 	
 	import flash.external.ExternalInterface;
 	
-	import ru.kutu.grind.events.LoadMediaEvent;
-	
 	import robotlegs.bender.framework.api.ILogger;
 	
 	public class MyJavaScriptBridge extends JavaScriptBridge {
@@ -17,21 +15,17 @@ package ru.kutu.grindplayer.config {
 			super();
 		}
 		
-		/**
-		 * Example for add custom function
-		 */
-		/*
 		override protected function createJSBridge():void {
 			super.createJSBridge();
 			
-			ExternalInterface.addCallback("reload", reload);
+			ExternalInterface.addCallback("setBufferTime", setBufferTime);
 		}
 		
-		protected function reload():void {
-			logger.debug(" * CurrentTime: " + player.currentTime);
-			eventDispatcher.dispatchEvent(new LoadMediaEvent(LoadMediaEvent.LOAD_MEDIA));
+		protected function setBufferTime(bufferTime:Number):void {
+			logger.debug(" * setBufferTime: " + player.currentTime);
+			(playerConfiguration as MyGrindPlayerConfiguration).bufferTime = bufferTime;
+			player.bufferTime = bufferTime;
 		}
-		//*/		
 	}
 	
 }
