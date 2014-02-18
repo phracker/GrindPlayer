@@ -56,7 +56,7 @@ package ru.kutu.grindplayer.config  {
 	import ru.kutu.grindplayer.views.mediators.BufferInfoMediator;
 	import ru.kutu.grindplayer.views.mediators.ScrubBarMinimizedMediator;
 	import ru.kutu.grindplayer.views.mediators.ShortcutsMediator;
-	import ru.kutu.grindplayer.views.mediators.StatInfoMediator;
+	//import ru.kutu.grindplayer.views.mediators.StatInfoMediator;
 	import ru.kutu.grindplayer.views.mediators.SubtitlesMediator;
 	import ru.kutu.grindplayer.views.mediators.SubtitlesMenuMediator;
 	import ru.kutu.grindplayer.views.mediators.MyLogoMediator;
@@ -67,6 +67,7 @@ package ru.kutu.grindplayer.config  {
 	//import ru.kutu.grindplayer.views.mediators.MyQualityMenuMediator;
 	import ru.kutu.grindplayer.views.mediators.MyScrubBarMediator;
 	import ru.kutu.grindplayer.views.mediators.MyMainViewMediator;
+	import ru.kutu.grindplayer.views.mediators.MyStatInfoMediator;
 	
 	import spark.components.Application;
 	
@@ -94,7 +95,7 @@ package ru.kutu.grindplayer.config  {
 			mediatorMap.map(Subtitles).toMediator(SubtitlesMediator);
 			mediatorMap.map(IControlBarView).toMediator(ControlBarBaseMediator);
 			mediatorMap.map(IBufferInfo).toMediator(BufferInfoMediator);
-			mediatorMap.map(IStatInfo).toMediator(StatInfoMediator);
+			mediatorMap.map(IStatInfo).toMediator(MyStatInfoMediator);
 			
 			mediatorMap.map(IScrubBar).toMediator(MyScrubBarMediator);
 			mediatorMap.map(IScrubBarTip).toMediator(ScrubBarTipBaseMediator);
