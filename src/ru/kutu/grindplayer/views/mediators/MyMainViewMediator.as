@@ -32,7 +32,7 @@ package ru.kutu.grindplayer.views.mediators {
 	public class MyMainViewMediator extends MainViewBaseMediator {
 		
 		private static var INIT_BUFFER_TIME_CHECKER_INTERVAL:uint = 200;
-		private static var FAILOVER_BUFFER_TIME:uint = 4;
+		private static var GENERAL_BUFFER_TIME:uint = 4;
 		
 		[Inject] public var playerConfiguration:PlayerConfiguration;
 		
@@ -202,7 +202,7 @@ package ru.kutu.grindplayer.views.mediators {
 					break;
 					
 				case "NetStream.Buffer.Full":
-					configuration.initialBufferTime = FAILOVER_BUFFER_TIME;
+					configuration.initialBufferTime = GENERAL_BUFFER_TIME;
 					initBufferTimeCheckerTimer.stop();
 					player.bufferTime = configuration.bufferTime;
 					break;
