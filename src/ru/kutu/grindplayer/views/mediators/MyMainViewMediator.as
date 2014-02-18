@@ -5,9 +5,7 @@ package ru.kutu.grindplayer.views.mediators {
 	
 	import flash.net.NetStream;
 	import flash.utils.setTimeout;
-	import flash.utils.Timer;
 	import flash.events.NetStatusEvent;
-	import flash.events.TimerEvent;
 	
 	import org.osmf.net.StreamType;
 	import org.osmf.net.NetStreamLoadTrait;
@@ -45,9 +43,6 @@ package ru.kutu.grindplayer.views.mediators {
 		private var duration:Number = 0;
 		private var seekTo:Number = 0;
 		
-		private var initBufferTimeCheckerTimer:Timer;
-		private var isFirstLoad:Boolean = true;
-		
 		override public function initialize():void {
 			super.initialize();
 			
@@ -58,9 +53,6 @@ package ru.kutu.grindplayer.views.mediators {
 			
 			player.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadStateChange);
 			player.addEventListener(TimeEvent.COMPLETE, onComplete);
-			
-			initBufferTimeCheckerTimer = new Timer(INIT_BUFFER_TIME_CHECKER_INTERVAL);
-			initBufferTimeCheckerTimer.addEventListener(TimerEvent.TIMER, onInitBufferTimeCheckerTimer);
 		}
 		
 		private function onCurrentTimeChange(event:TimeEvent):void {
@@ -73,7 +65,8 @@ package ru.kutu.grindplayer.views.mediators {
 			
 			if ( netStream != null ) {
 				if (player.state != MediaPlayerState.BUFFERING) {
-					netStream.bufferTime = player.bufferTime;
+					player.bufferTime = configuration.bufferTime;
+					netStream.bufferTime = configuration.bufferTime;
 				}
 			}
 		}
@@ -85,19 +78,13 @@ package ru.kutu.grindplayer.views.mediators {
 			switch (e.state) {
 				case MediaPlayerState.PAUSED:
 					if ( netStream != null ) {
-						if (netStream.bufferTime != player.bufferTime) {
-							netStream.bufferTime = player.bufferTime;
-						}
+						player.bufferTime = configuration.bufferTime;
+						netStream.bufferTime = configuration.bufferTime;
 					}
 					break;
 			}
 			
 			super.onMediaPlayerStateChange(e);
-		}
-		
-		private function onInitBufferTimeCheckerTimer(event:TimerEvent):void {
-			netStream.bufferTime = player.bufferTime;
-			logger.debug(" * ---- init: " + configuration.initialBufferTime + ", set: " + netStream.bufferTime + ", cur: " + netStream.bufferLength);
 		}
 		
 		private function onCanSeekShange(e:MediaPlayerCapabilityChangeEvent):void {
@@ -106,7 +93,6 @@ package ru.kutu.grindplayer.views.mediators {
 					logger.debug(" * Seek, seekTo: " + secondsToHMSString(seekTo));
 					player.seek(seekTo);
 					seekTo = 0;
-					player.play();
 				}
 			}
 		}
@@ -139,28 +125,10 @@ package ru.kutu.grindplayer.views.mediators {
 					return;
 				}
 				
-				if (seekTo > 0) {
-					player.play();
-					player.stop();
-				}
-				
 				netStream = nsLoadTrait.netStream;
 				
 				if (netStream != null) {
-					if (isFirstLoad) {
-						netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-						player.bufferTime = configuration.initialBufferTime;
-						initBufferTimeCheckerTimer.start();
-						
-						// In the case of live stream,
-						// if pause and play within 2 second,
-						// playing position go to start point.
-						if (configuration.initialBufferTime > 2) {
-							player.pause();
-							setTimeout(player.play, 2000);
-						}
-						isFirstLoad = false;
-					}
+					netStream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
 				}
 				
 				if (streamType == null) {
@@ -196,6 +164,7 @@ package ru.kutu.grindplayer.views.mediators {
 					}
 					break;
 					
+				case "NetStream.Unpause.Notify":
 				case "NetStream.Seek.Notify":
 					player.bufferTime = configuration.initialBufferTime;
 					netStream.bufferTime = configuration.initialBufferTime;
@@ -203,8 +172,8 @@ package ru.kutu.grindplayer.views.mediators {
 					
 				case "NetStream.Buffer.Full":
 					configuration.initialBufferTime = GENERAL_BUFFER_TIME;
-					initBufferTimeCheckerTimer.stop();
 					player.bufferTime = configuration.bufferTime;
+					netStream.bufferTime = configuration.bufferTime;
 					break;
 					
 				case "NetStream.Play.StreamNotFound":
