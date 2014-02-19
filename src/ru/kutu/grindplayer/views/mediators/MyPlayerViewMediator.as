@@ -10,6 +10,10 @@ package ru.kutu.grindplayer.views.mediators {
 		import org.denivip.osmf.plugins.HLSPluginInfo;
 	}
 	
+	CONFIG::AKAMAI_ADVANCED {
+		import com.akamai.osmf.AkamaiAdvancedStreamingPluginInfo;
+	}
+	
 	public class MyPlayerViewMediator extends PlayerViewMediator {
 		
 		override protected function processConfiguration(flashvars:Object):void {
@@ -34,6 +38,10 @@ package ru.kutu.grindplayer.views.mediators {
 			
 			CONFIG::OPEN_HLS {
 				pluginConfigurations.push(new PluginInfoResource(new HLSPluginInfo()));
+			}
+			
+			CONFIG::AKAMAI_ADVANCED {
+				pluginConfigurations.push(new PluginInfoResource(new AkamaiAdvancedStreamingPluginInfo()));
 			}
 		}
 		
