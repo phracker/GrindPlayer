@@ -8,12 +8,7 @@ package ru.kutu.grindplayer.views.mediators {
 	import flash.utils.Timer;
 	
 	import org.osmf.events.LoadEvent;
-	import org.osmf.events.TimeEvent;
-	import org.osmf.events.MetadataEvent;
-	import org.osmf.events.BufferEvent;
-	import org.osmf.events.MediaPlayerStateChangeEvent;
 	import org.osmf.media.MediaElement;
-	import org.osmf.media.MediaPlayerState;
 	import org.osmf.net.StreamType;
 	import org.osmf.net.NetStreamLoadTrait;
 	import org.osmf.traits.MediaTraitType;
