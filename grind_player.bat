@@ -16,7 +16,9 @@
 	-externs ru.kutu.osmf.subtitles.SubtitlesPlugin ^
 	-define CONFIG::HLS false ^
 	-define CONFIG::OPEN_HLS false ^
+	-define CONFIG::AKAMAI_ADVANCED true ^
 	-define CONFIG::DEV false ^
 	-define CONFIG::LOGGING %logging% ^
+	-define CONFIG::DEBUG %debug% ^
 	%* ^
 	src\GrindPlayer.mxml
