@@ -59,9 +59,12 @@
 			>
 
 			<components:PlayPauseButton
+				id="PlayPauseButtonID"
+				includeInLayout="{PlayPauseButtonID.visible}"
 				width="55"
 				/>
 
+			<s:Spacer width="10" includeInLayout="{!PlayPauseButtonID.visible}"/>
 			<components:VolumeComponent />
 
 			<s:Spacer width="10" />
@@ -76,7 +79,9 @@
 				/>
 
 			<components:AlternateMenuButton
+				id="AlternateMenuButtonID"
 				width="26"
+				includeInLayout="{AlternateMenuButtonID.visible}"
 				skinClass="ru.kutu.grindplayer.views.skins.AlternateMenuSkin"
 				/>
 
