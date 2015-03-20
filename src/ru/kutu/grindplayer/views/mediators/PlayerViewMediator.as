@@ -74,6 +74,7 @@ package ru.kutu.grindplayer.views.mediators {
 		override protected function addCustomPlugins(pluginConfigurations:Vector.<MediaResourceBase>):void {
 			pluginConfigurations.push(new PluginInfoResource(new SubtitlesPluginInfo()));
 			pluginConfigurations.push(new PluginInfoResource(new AdvertisementPluginInfo()));
+			
 			CONFIG::HLS {
 				pluginConfigurations.push(new PluginInfoResource(new OSMFHLSPluginInfo(contextView.view.loaderInfo)));
 			}

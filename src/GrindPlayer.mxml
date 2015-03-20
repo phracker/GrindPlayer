@@ -19,7 +19,7 @@
 	<fx:Declarations>
 		<rl2:ContextBuilder>
 			<config:GrindBundle />
-			<config:AppConfig />
+			<config:MyAppConfig />
 		</rl2:ContextBuilder>
 	</fx:Declarations>
 	
